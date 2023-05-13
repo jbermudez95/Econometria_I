@@ -90,13 +90,40 @@ reg numbil lpop yearsinWTO `tlc_dummies'
 *__Pregunta 5
 ********************************************
 
+*a
+clear
+
 import excel "C:\Tarea1_Econometría\names.xlsx", sheet("Billionaires 2015") firstrow
+gen year_2015 = 2015
+order name year_2015 privatization
 save "C:\Tarea1_Econometría\Billionaires 2015.dta", replace
 
 clear
 
 import excel "C:\Tarea1_Econometría\names.xlsx", sheet("Billonaires 1995") firstrow clear
+gen year_1995 = 1995
+gen privatization = .
+order name year_1995 privatization
 save "C:\Tarea1_Econometría\Billonaires 1995.dta", replace
+
+clear
+
+use "C:\Tarea1_Econometría\Billonaires 1995.dta"
+merge 1:1 (name) using "C:\Tarea1_Econometría\Billionaires 2015.dta"
+order name year_1995 year_2015 privatization
+save "C:\Tarea1_Econometría\Billionaires_Rusia.dta", replace
+
+*b
+gen old_billionare = 0
+replace old_billionare = 1 if year_1995 == 1995 
+replace old_billionare = 0 if (year_2015 != 2015)
+
+*c
+replace privatization = 0 if privatization==.
+
+*d
+reg privatization old_billionare
+
 
 
 
