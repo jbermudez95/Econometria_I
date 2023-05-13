@@ -57,6 +57,16 @@ reg numbil lpop yearsinWTO `tlc_dummies'
 
 *hola hola hola
 
+*__Pregunta 5
+
+import excel "C:\Tarea1_Econometría\names.xlsx", sheet("Billionaires 2015") firstrow
+save "C:\Tarea1_Econometría\Billionaires 2015.dta", replace
+
+clear
+
+import excel "C:\Tarea1_Econometría\names.xlsx", sheet("Billonaires 1995") firstrow clear
+save "C:\Tarea1_Econometría\Billonaires 1995.dta", replace
+
 
 
 
