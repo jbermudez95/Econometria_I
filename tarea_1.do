@@ -82,7 +82,17 @@ reg numbil lpop yearsinWTO `tlc_dummies'
 *-- Pregunta 4
 ********************************************
 
+reg numbil lpop yearsinWTO totppb9008
+global b_pop = _b[lpop]
+global b_wto = _b[yearsinWTO]
+global b_tot = _b[totppb9008]
+global const = _b[_cons]
 
+replace yearsinWTO = 59   if country == "Chile"
+replace totppb9008 = 2.75 if country == "Chile"
+
+replace numbil = ${const} + (${b_pop} * lpop) + (${b_wto} * yearsinWTO) + (${b_tot} * totppb9008) if country == "Chile" 
+replace numbil = round(numbil) if country == "Chile"
 
 
 
