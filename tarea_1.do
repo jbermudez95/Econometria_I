@@ -17,6 +17,7 @@ else if "`c(username)'" == "franc" {
 	cd "C:\Tarea1_Econometría"
 }
 
+*log using log_tarea1.smcl, replace
 use dataset.billonaires.dta, clear
 
 ********************************************
@@ -43,7 +44,7 @@ keep year numbil bill_permil country midinc08 lowinc08 yearsinWTO wtoyear totppb
 *-- Pregunta 2
 ********************************************
 
-histogram bill_permill, bin(5) frequency ytitle(Frecuencia) xtitle(Número de Billonario por Millon de Habitantes) title(Histograma del Número de Billonarios por Millón de Habitantes)
+*histogram bill_permill, bin(5) frequency ytitle(Frecuencia) xtitle(Número de Billonario por Millon de Habitantes) title(Histograma del Número de Billonarios por Millón de Habitantes)
 
 list country if bill_permill >= 1 & !missing(bill_permill)
 
@@ -58,23 +59,17 @@ tabstat bill_permill, s(mean median p75 p90) by(category)
 *-- Pregunta 3
 ********************************************
 
+* a
 gen lpop = log(population)
 
 reg numbil lpop yearsinWTO
 
+* b
 forvalues i = 1995/2015 {
     gen tlc_`i' = (wtoyear == `i')
 }
 
-
-local tlc_dummies ""
-
-forvalues year = 1995/2014 {
-    local tlc_dummies "`tlc_dummies' tlc_`year'"
-}
-
-
-reg numbil lpop yearsinWTO `tlc_dummies'
+reg numbil lpop yearsinWTO tlc_*
 
 
 
@@ -82,17 +77,53 @@ reg numbil lpop yearsinWTO `tlc_dummies'
 *-- Pregunta 4
 ********************************************
 
+* a
+eststo drop *
+eststo: reg numbil lpop yearsinWTO
+eststo: reg numbil lpop yearsinWTO totppb9008 
+
+esttab using "pregunta_4a.tex", replace f booktabs nomtitles se(2) b(3) star(* 0.10 ** 0.05 *** 0.01) ///
+        scalars("N N" "r2 R$^2$" "r2_a R$^2$-Ajustado") coeflabels(lpop "log(population)" _cons "Constante") 
+
+* b
+replace yearsinWTO = 59   if country == "Chile"
+replace totppb9008 = 2.75 if country == "Chile"
+
+* Forma "sencilla" 
+reg numbil lpop yearsinWTO totppb9008
+predict numbil_predicho_1, xb
+predict numbil_std_1, stdp
+
+global t_student = invttail(e(df_r), 0.025)										// Esta "t-student" es la misma para cualquiera de las dos formas
+
+gen error_estimacion_1 = ${t_student} * (numbil_std_1 / sqrt(e(N)))
+
+gen limite_inf_1 = numbil_predicho_1 - error_estimacion_1
+gen limit_sup_1  = numbil_predicho_1 + error_estimacion_1
+
+* Forma "manual"
 reg numbil lpop yearsinWTO totppb9008
 global b_pop = _b[lpop]
 global b_wto = _b[yearsinWTO]
 global b_tot = _b[totppb9008]
 global const = _b[_cons]
+mat V = e(V)
 
-replace yearsinWTO = 59   if country == "Chile"
-replace totppb9008 = 2.75 if country == "Chile"
+gen numbil_predicho_2 = ${const} + (${b_pop} * lpop) + (${b_wto} * yearsinWTO) + (${b_tot} * totppb9008)
 
-replace numbil = ${const} + (${b_pop} * lpop) + (${b_wto} * yearsinWTO) + (${b_tot} * totppb9008) if country == "Chile" 
-replace numbil = round(numbil) if country == "Chile"
+gen numbil_std_2 = V[4,4] + ((16.68453)^2 * V[1,1]) + ((59)^2 * V[2,2]) + ((2.41)^2 * V[3,3]) + ///
+				   ((2*16.68453) * V[4,1]) + ((2*59) * V[4,2]) + ((2*2.41) * V[4,3]) + 		 ///
+				   ((2*16.68453*59) * V[2,1]) + ((2*16.68453*2.41) * V[3,1]) + ((2*59*2.41) * V[3,2])
+replace numbil_std_2 = sqrt(numbil_std_2)
+
+gen error_estimacion_2 = ${t_student} * (numbil_std_2 / sqrt(e(N)))
+
+gen limite_inf_2 = numbil_predicho_2 - error_estimacion_2
+gen limit_sup_2  = numbil_predicho_2 + error_estimacion_2
+
+list limite_inf_1 numbil_predicho_1 limit_sup_1 if country == "Chile"
+list limite_inf_2 numbil_predicho_2 limit_sup_2 if country == "Chile"			// Ambas formas conducen a la misma estimación :)
+
 
 
 
@@ -103,25 +134,25 @@ replace numbil = round(numbil) if country == "Chile"
 *a
 clear
 
-import excel "C:\Tarea1_Econometría\names.xlsx", sheet("Billionaires 2015") firstrow
+import excel "names.xlsx", sheet("Billionaires 2015") firstrow
 gen year_2015 = 2015
 order name year_2015 privatization
-save "C:\Tarea1_Econometría\Billionaires 2015.dta", replace
+save "Billionaires 2015.dta", replace
 
 clear
 
-import excel "C:\Tarea1_Econometría\names.xlsx", sheet("Billonaires 1995") firstrow clear
+import excel "names.xlsx", sheet("Billonaires 1995") firstrow clear
 gen year_1995 = 1995
 gen privatization = .
 order name year_1995 privatization
-save "C:\Tarea1_Econometría\Billonaires 1995.dta", replace
+save "Billonaires 1995.dta", replace
 
 clear
 
-use "C:\Tarea1_Econometría\Billonaires 1995.dta"
-merge 1:1 (name) using "C:\Tarea1_Econometría\Billionaires 2015.dta"
+use "Billonaires 1995.dta"
+merge 1:1 (name) using "Billionaires 2015.dta"
 order name year_1995 year_2015 privatization
-save "C:\Tarea1_Econometría\Billionaires_Rusia.dta", replace
+save "Billionaires_Rusia.dta", replace
 
 *b
 gen old_billionare = 0
@@ -134,25 +165,7 @@ replace privatization = 0 if privatization==.
 *d
 reg privatization old_billionare
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+log close
+translate log_tarea1.smcl log_tarea1.pdf, translator(smcl2pdf)
 
 
