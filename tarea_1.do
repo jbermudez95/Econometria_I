@@ -44,7 +44,7 @@ keep year numbil bill_permil country midinc08 lowinc08 yearsinWTO wtoyear totppb
 *-- Pregunta 2
 ********************************************
 
-*histogram bill_permill, bin(5) frequency ytitle(Frecuencia) xtitle(Número de Billonario por Millon de Habitantes) title(Histograma del Número de Billonarios por Millón de Habitantes)
+histogram bill_permill, bin(10) frequency ytitle(Frecuencia) xtitle(Número de Billonario por Millon de Habitantes) color(green)
 
 list country if bill_permill >= 1 & !missing(bill_permill)
 
@@ -59,17 +59,18 @@ tabstat bill_permill, s(mean median p75 p90) by(category)
 *-- Pregunta 3
 ********************************************
 
-* a
 gen lpop = log(population)
 
 reg numbil lpop yearsinWTO
 
-* b
 forvalues i = 1995/2015 {
     gen tlc_`i' = (wtoyear == `i')
 }
 
-reg numbil lpop yearsinWTO tlc_*
+
+reg numbil lpop yearsinWTO tlc*
+
+reg numbil lpop tlc*
 
 
 
