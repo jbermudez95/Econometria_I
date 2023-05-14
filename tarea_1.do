@@ -43,7 +43,7 @@ keep year numbil bill_permil country midinc08 lowinc08 yearsinWTO wtoyear totppb
 *-- Pregunta 2
 ********************************************
 
-histogram bill_permill, bin(5) frequency ytitle(Frecuencia) xtitle(Número de Billonario por Millon de Habitantes) title(Histograma del Número de Billonarios por Millón de Habitantes)
+histogram bill_permill, bin(10) frequency ytitle(Frecuencia) xtitle(Número de Billonario por Millon de Habitantes) color(green)
 
 list country if bill_permill >= 1 & !missing(bill_permill)
 
@@ -67,14 +67,9 @@ forvalues i = 1995/2015 {
 }
 
 
-local tlc_dummies ""
+reg numbil lpop yearsinWTO tlc*
 
-forvalues year = 1995/2014 {
-    local tlc_dummies "`tlc_dummies' tlc_`year'"
-}
-
-
-reg numbil lpop yearsinWTO `tlc_dummies'
+reg numbil lpop tlc*
 
 
 
