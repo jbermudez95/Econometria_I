@@ -176,7 +176,13 @@ replace old_billionare = 0 if (year_2015 != 2015)
 replace privatization = 0 if privatization==.
 
 *d
-reg privatization old_billionare
+eststo drop *
+
+eststo: reg old_billionare privatization
+
+esttab using "pregunta_5_d.tex", replace f booktabs nomtitles se(2) b(3) star(* 0.10 ** 0.05 *** 0.01) ///
+        scalars("N N" "r2 R$^2$" "r2_a R$^2$-Ajustado") coeflabels(privatization "privatization" _cons "Constante") 
+
 
 log close
 translate log_tarea1.smcl log_tarea1.pdf, translator(smcl2pdf)
