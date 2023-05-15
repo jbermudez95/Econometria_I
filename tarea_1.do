@@ -117,7 +117,6 @@ esttab using "pregunta_4a.tex", replace f booktabs nonumbers mtitles("numbill" "
 replace yearsinWTO = 59   if country == "Chile"
 replace totppb9008 = 2.75 if country == "Chile"
 
-* Forma "sencilla" 
 reg numbil lpop yearsinWTO totppb9008
 predict numbil_predicho_1, xb
 predict numbil_std_1, stdp
