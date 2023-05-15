@@ -93,7 +93,11 @@ eststo: reg numbil lpop yearsinWTO tlc*
 
 eststo: reg numbil lpop tlc*
 
-esttab using "pregunta_3_b.tex", replace f booktabs nonumbers mtitles("numbill" "numbill") se(2) b(3) star(* 0.10 ** 0.05 *** 0.01) ///
+eststo: reg numbil lpop yearsinWTO tlc_1995 - tlc_2014
+
+eststo: reg numbil lpop tlc_1995 - tlc_2014
+
+esttab using "pregunta_3_b.tex", replace f booktabs nonumbers mtitles("numbill" "numbill" "numbill" "numbill") se(2) b(3) star(* 0.10 ** 0.05 *** 0.01) ///
         scalars("N N" "r2 R$^2$" "r2_a R$^2$-Ajustado") coeflabels(lpop "log(population)" _cons "Constante") 
 
 
