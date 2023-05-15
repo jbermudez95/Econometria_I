@@ -17,25 +17,34 @@ else if "`c(username)'" == "franc" {
 	cd "C:\Tarea1_Econometría"
 }
 
-*log using log_tarea1.smcl, replace
+cap which estout
+if (_rc) ssc install estout														// Paquete necesario para generar tablas en formato de Latex
+
+log using log_tarea1.smcl, replace
 use dataset.billonaires.dta, clear
 
 ********************************************
 *-- Pregunta 1
 ********************************************
 
+* Inciso a
 sort country
-
 drop if year!=2013
 
+* Inciso b
 replace	numbil=0 if numbil==.
 
+* Inciso c
 merge 1:1 country using pop.dta, keepusing(population)
+
+* Inciso d
 drop if population == .
 drop _merge
 
+* Inciso e
 gen bill_permill = (numbil / population) * 1000000
 
+* Inciso f
 keep year numbil bill_permil country midinc08 lowinc08 yearsinWTO wtoyear totppb9008 population
 
 
@@ -71,7 +80,7 @@ eststo drop *
 
 eststo: reg numbil lpop yearsinWTO
 
-esttab using "pregunta_3_a.tex", replace f booktabs nomtitles se(2) b(3) star(* 0.10 ** 0.05 *** 0.01) ///
+esttab using "pregunta_3_a.tex", replace f booktabs nonumbers mtitles("numbill") se(2) b(3) star(* 0.10 ** 0.05 *** 0.01) ///
         scalars("N N" "r2 R$^2$" "r2_a R$^2$-Ajustado") coeflabels(lpop "log(population)" _cons "Constante") 
 
 * b
@@ -82,7 +91,7 @@ eststo: reg numbil lpop yearsinWTO tlc*
 
 eststo: reg numbil lpop tlc*
 
-esttab using "pregunta_3_b.tex", replace f booktabs nomtitles se(2) b(3) star(* 0.10 ** 0.05 *** 0.01) ///
+esttab using "pregunta_3_b.tex", replace f booktabs nonumbers mtitles("numbill" "numbill") se(2) b(3) star(* 0.10 ** 0.05 *** 0.01) ///
         scalars("N N" "r2 R$^2$" "r2_a R$^2$-Ajustado") coeflabels(lpop "log(population)" _cons "Constante") 
 
 
@@ -95,7 +104,7 @@ eststo drop *
 eststo: reg numbil lpop yearsinWTO
 eststo: reg numbil lpop yearsinWTO totppb9008 
 
-esttab using "pregunta_4a.tex", replace f booktabs nomtitles se(2) b(3) star(* 0.10 ** 0.05 *** 0.01) ///
+esttab using "pregunta_4a.tex", replace f booktabs nonumbers mtitles("numbill" "numbill") se(2) b(3) star(* 0.10 ** 0.05 *** 0.01) ///
         scalars("N N" "r2 R$^2$" "r2_a R$^2$-Ajustado") coeflabels(lpop "log(population)" _cons "Constante") 
 
 * b
@@ -141,10 +150,10 @@ list limite_inf_2 numbil_predicho_2 limit_sup_2 if country == "Chile"			// Ambas
 
 
 ********************************************
-*__Pregunta 5
+*-- Pregunta 5
 ********************************************
 
-*a
+* Inciso a
 clear
 
 import excel "names.xlsx", sheet("Billionaires 2015") firstrow
@@ -163,24 +172,24 @@ save "Billonaires 1995.dta", replace
 clear
 
 use "Billonaires 1995.dta"
-merge 1:1 (name) using "Billionaires 2015.dta"
+merge 1:1 (name) using "Billionaires 2015.dta", update
 order name year_1995 year_2015 privatization
 save "Billionaires_Rusia.dta", replace
 
-*b
+* Inciso b
 gen old_billionare = 0
 replace old_billionare = 1 if year_1995 == 1995 
 replace old_billionare = 0 if (year_2015 != 2015)
 
-*c
+* Inciso c
 replace privatization = 0 if privatization==.
 
-*d
+* Inciso d
 eststo drop *
 
 eststo: reg old_billionare privatization
 
-esttab using "pregunta_5_d.tex", replace f booktabs nomtitles se(2) b(3) star(* 0.10 ** 0.05 *** 0.01) ///
+esttab using "pregunta_5_d.tex", replace f booktabs nonumbers mtitles("old billionaire") se(2) b(3) star(* 0.10 ** 0.05 *** 0.01) ///
         scalars("N N" "r2 R$^2$" "r2_a R$^2$-Ajustado") coeflabels(privatization "privatization" _cons "Constante") 
 
 
