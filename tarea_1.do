@@ -55,10 +55,13 @@ keep year numbil bill_permil country midinc08 lowinc08 yearsinWTO wtoyear totppb
 *-- Pregunta 2
 ********************************************
 
+* Inciso a
 histogram bill_permill, bin(10) frequency ytitle(Frecuencia) xtitle(Número de Billonario por Millon de Habitantes) color(green)
 
+* Inciso b
 list country if bill_permill >= 1 & !missing(bill_permill)
 
+* Inciso c
 gen category = cond( lowinc08 == 1, "Low Income", cond(midinc08 == 1, "Meddle Income", "High Income"))
 
 tabstat bill_permill, s(mean median p75 p90) by(category)
@@ -70,7 +73,7 @@ tabstat bill_permill, s(mean median p75 p90) by(category)
 *-- Pregunta 3
 ********************************************
 
-* a
+* Inciso a
 
 gen lpop = log(population)
 
@@ -85,7 +88,7 @@ eststo: reg numbil lpop yearsinWTO
 esttab using "pregunta_3_a.tex", replace f booktabs nonumbers mtitles("numbill") se(2) b(3) star(* 0.10 ** 0.05 *** 0.01) ///
         scalars("N N" "r2 R$^2$" "r2_a R$^2$-Ajustado") coeflabels(lpop "log(population)" _cons "Constante") 
 
-* b
+* Inciso b
 
 eststo drop *
 
