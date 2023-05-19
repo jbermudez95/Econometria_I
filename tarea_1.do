@@ -4,7 +4,7 @@
 Grupo conformado por:
 Francisca Villegas
 Cristóbal Pérez
-Jose Carlo Bermúdez jojo
+Jose Carlo Bermúdez
 */
 
 log using log_tarea1.smcl, replace
