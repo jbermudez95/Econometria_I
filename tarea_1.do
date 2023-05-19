@@ -179,6 +179,7 @@ esttab using "pregunta_5_d.tex", replace f booktabs nonumbers mtitles("old billi
         scalars("N N" "r2 R$^2$" "r2_a R$^2$-Ajustado") coeflabels(privatization "privatization" _cons "Constante") 
 
 
-translate log_tarea1.smcl log_tarea1.pdf, translator(smcl2pdf)
 log close
+translate log_tarea1.smcl log_tarea1.pdf, translator(smcl2pdf)
+
 
