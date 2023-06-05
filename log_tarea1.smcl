@@ -1,0 +1,95 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:\Users\bermu\OneDrive - Universidad Católica de Chile\Repositorios de Github\Econometria_I\log_tarea1.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}19 May 2023, 15:39:38
+{txt}
+{com}. 
+. cap which estout
+{txt}
+{com}. if (_rc) ssc install estout                                                                                                             // Paquete necesario para generar tablas en formato de Latex
+{txt}
+{com}. 
+. * Cargando directorios de los participantes del grupo
+. if "`c(username)'" == "crist" {c -(}
+.         cd "C:\Users\crist\OneDrive - Universidad Católica de Chile\Cristóbal\ME\1º Semestre\Econometría\Tareas\Tarea 1"
+. {c )-}
+{txt}
+{com}. else if "`c(username)'" == "Jose Carlo Bermúdez" {c -(}
+.         cd "C:\Users\bermu\OneDrive - Universidad Católica de Chile\Clases\Econometría\Tareas\Tarea1"
+{res}C:\Users\bermu\OneDrive - Universidad Católica de Chile\Clases\Econometría\Tareas\Tarea1
+{com}. {c )-}
+{txt}
+{com}. else if "`c(username)'" == "franc" {c -(}
+.         cd "C:\Tarea1_Econometría"
+. {c )-}
+{txt}
+{com}. 
+. use dataset.billonaires.dta, clear
+{txt}
+{com}. 
+. ********************************************
+. *-- Pregunta 1
+. ********************************************
+. 
+. * Inciso a
+. sort country
+{txt}
+{com}. drop if year!=2013
+{txt}(5,192 observations deleted)
+
+{com}. 
+. * Inciso b
+. replace numbil=0 if numbil==.
+{txt}(150 real changes made)
+
+{com}. 
+. * Inciso c
+. merge 1:1 country using pop.dta, keepusing(population)
+{res}
+{txt}{col 5}Result{col 33}Number of obs
+{col 5}{hline 41}
+{col 5}Not matched{col 30}{res}               1
+{txt}{col 9}from master{col 30}{res}               0{txt}  (_merge==1)
+{col 9}from using{col 30}{res}               1{txt}  (_merge==2)
+
+{col 5}Matched{col 30}{res}             212{txt}  (_merge==3)
+{col 5}{hline 41}
+
+{com}. 
+. * Inciso d
+. drop if population == .
+{txt}(1 observation deleted)
+
+{com}. drop _merge
+{txt}
+{com}. 
+. * Inciso e
+. gen bill_permill = (numbil / population) * 1000000
+{txt}(1 missing value generated)
+
+{com}. 
+. * Inciso f
+. keep year numbil bill_permil country midinc08 lowinc08 yearsinWTO wtoyear totppb9008 population
+{txt}
+{com}. 
+. 
+. 
+. ********************************************
+. *-- Pregunta 2
+. ********************************************
+. 
+. * Inciso a
+. histogram bill_permill, bin(10) frequency ytitle(Frecuencia) xtitle(N mero de Billonario por Millon de Habitantes) color(green)
+{txt}(bin={res}10{txt}, start={res}0{txt}, width={res}7.9300041{txt})
+{res}{txt}
+{com}. jojo
+{err}command {bf}jojo{sf} is unrecognized
+{txt}{search r(199), local:r(199);}
+
+end of do-file
+
+{search r(199), local:r(199);}
+
+{com}. exit, clear
