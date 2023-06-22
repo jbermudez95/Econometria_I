@@ -37,6 +37,7 @@ graph export "scatter.pdf", replace
 
 
 *2
+**#
 eststo drop *
 eststo: reg log_ventas log_creditos 
 esttab using "pregunta_1_1.tex", replace f booktabs nonumbers mtitles("log(Ventas)") se(2) b(3) star(* 0.10 ** 0.05 *** 0.01) ///
@@ -53,6 +54,13 @@ esttab m1 m2 using "pregunta_1_4.tex", replace f booktabs nonumbers mtitles("log
 
 	   
 *5
+gen log_distbank = ln(dist_bank)
+qui reg log_creditos log_distbank
+loc b0: dis %4.2fc _b[_cons]
+loc b1: dis %4.2fc _b[log_distbank]
+twoway (scatter log_distbank log_creditos , mcolor(blue%20)) (lfit log_distbank log_creditos, lc(dknavy)), text(7 2 "log(Créditos)=`b0'+`b1'log(Distancia)") ytitle("Log(Créditos)") legend(off) ///
+	   yscale(titlegap(3)) xtitle("Log(Distancia)") xscale(titlegap(3)) yscale(titlegap(3)) graphr(color(white))
+graph export "scatter_5.pdf", replace
 
 *6
 
