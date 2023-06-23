@@ -1,6 +1,8 @@
 
 **Tarea 2 
-log using log_tarea2.smcl, replace
+clear
+
+*log using log_tarea2.smcl, replace
 
 cap which estout
 if (_rc) ssc install estout														// Paquete necesario para generar tablas en formato de Latex
@@ -38,7 +40,7 @@ twoway (scatter log_ventas log_creditos, mcolor(blue%20))     ///
 graph export "scatter_1.pdf", replace
 
 
-*2
+*2q
 eststo drop *
 eststo: reg log_ventas log_creditos 
 esttab using "pregunta_1_1.tex", replace f booktabs nonumbers mtitles("log(Ventas)") se(2) b(3) star(* 0.10 ** 0.05 *** 0.01) ///
@@ -62,9 +64,30 @@ graph export "scatter_5.pdf", replace
 
 *6
 
-*7
+eststo drop *
+eststo m1: reg log_creditos log_distbank, robust
+predict log_creditos_predict, xb
+eststo m2: reg log_ventas log_creditos_predict, robust
+esttab m1 m2 using "pregunta_1_6.tex", replace f booktabs nonumbers mtitles("1era Etapa" "2da Etapa") se(2) b(3) star(* 0.10 ** 0.05 *** 0.01) ///
+       scalars("N N" "r2 R$^2$" "F F-Statistic") coeflabels(log_distbank "log(Distancia)" log_creditos_predict "\hat{Log(Creditos)}" _cons "Constante") 
 
+*7
+eststo drop *
+eststo: ivregress 2sls log_ventas (log_creditos=log_distbank), robust
+esttab using "pregunta1_7.tex", replace f booktabs nonumbers mtitles (log_distbank "log(Distancia)") se(2) b(3) star(* 0.10 ** 0.05 *** 0.01) ///
+        scalars("N N" "r2 R$^2$" "r2_a R$^2$-Ajustado") coeflabels("log_creditos" "\hat{Log(Creditos)}" _cons "Constante")
+		
 *8
+eststo drop *
+eststo m1: reg log_creditos log_distbank, robust
+*predict res_hausman, residuals 
+eststo m2: reg log_ventas log_creditos res_hausman, robust
+esttab m1 m2 using "pregunta_1_8.tex", replace f booktabs nonumbers mtitles("1era Etapa" "2da Etapa") se(2) b(3) star(* 0.10 ** 0.05 *** 0.01) ///
+       scalars("N N" "r2 R$^2$" "F F-Statistic") coeflabels(log_distbank "log(Distancia)" log_creditos_predict "{Log(Creditos)}" _cons "Constante") 
+	   
+ivregress 2sls log_ventas (log_creditos=log_distbank), robust
+estat endogenous
+
 
 *9
 
