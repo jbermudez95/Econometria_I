@@ -28,12 +28,22 @@ gen log_ventas   = ln(ventas)
 gen log_creditos = ln(creditos)
 
 *1 Scatter Plot
-qui reg log_ventas log_creditos
-loc b0: dis %4.2fc _b[_cons]
-loc b1: dis %4.2fc _b[log_creditos]
-twoway (scatter log_ventas log_creditos, mcolor(blue%20)) (lfit log_ventas log_creditos, lc(dknavy)), text(7 2 "log(Ventas)=`b0'+`b1'log(Créditos)") ytitle("Log(Ventas)") legend(off) ///
-	   yscale(titlegap(3)) xtitle("Log(Créditos)") xscale(titlegap(3)) yscale(titlegap(3)) graphr(color(white))
-graph export "scatter.pdf", replace
+*qui reg log_ventas log_creditos
+*loc b0: dis %4.2fc _b[_cons]
+*loc b1: dis %4.2fc _b[log_creditos]
+*twoway (scatter log_ventas log_creditos, mcolor(blue%20)) (lfit log_ventas log_creditos, lc(dknavy)), ///
+		*text(7 2 "log(Ventas)=`b0'+`b1'log(Créditos)") ytitle("Log(Ventas)") legend(off) ///
+	   *yscale(titlegap(3)) xtitle("Log(Créditos)") xscale(titlegap(3)) yscale(titlegap(3)) graphr(color(white))
+*graph export "scatter.pdf", replace
+
+twoway (scatter log_ventas log_creditos, mcolor(blue%20))     ///
+		(lfit log_ventas log_creditos, lc(dknavy)) 		   	  ///
+		(lfit log_ventas log_ventas, lc(red) lp(dash)),       ///
+		ytitle("Log(Ventas)") yscale(titlegap(3)) 			  ///
+	    xtitle("Log(Créditos)") xscale(titlegap(3)) yscale(titlegap(3)) graphr(color(white)) ///
+		xlabel(0(1.4)7) ylabel(0(1.4)7) legend(pos(4) ring(0) col(1) ///
+		order(2 "Función de Regresión Muestral" 3 "Recta 45°") region(fcolor(white)))
+graph export "scatter_v2.pdf", replace
 
 
 *2
