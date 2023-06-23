@@ -63,33 +63,28 @@ twoway (scatter log_distbank log_creditos , mcolor(blue%20)) (lfit log_distbank 
 graph export "scatter_5.pdf", replace
 
 *6
-
 eststo drop *
 eststo m1: reg log_creditos log_distbank, robust
 predict log_creditos_predict, xb
 eststo m2: reg log_ventas log_creditos_predict, robust
 esttab m1 m2 using "pregunta_1_6.tex", replace f booktabs nonumbers mtitles("1era Etapa" "2da Etapa") se(2) b(3) star(* 0.10 ** 0.05 *** 0.01) ///
-       scalars("N N" "r2 R$^2$" "F F-Statistic") coeflabels(log_distbank "log(Distancia)" log_creditos_predict "\hat{Log(Creditos)}" _cons "Constante") 
+       scalars("N N" "r2 R$^2$" "F F-Statistic") coeflabels(log_distbank "log(Distancia)" log_creditos_predict "$\hat{Log(Creditos)}$" _cons "Constante") 
 
 *7
 eststo drop *
 eststo: ivregress 2sls log_ventas (log_creditos=log_distbank), robust
-esttab using "pregunta1_7.tex", replace f booktabs nonumbers mtitles (log_distbank "log(Distancia)") se(2) b(3) star(* 0.10 ** 0.05 *** 0.01) ///
-        scalars("N N" "r2 R$^2$" "r2_a R$^2$-Ajustado") coeflabels("log_creditos" "\hat{Log(Creditos)}" _cons "Constante")
+esttab using "pregunta_1_7.tex", replace f booktabs nonumbers mtitles("log(Ventas)") se(2) b(3) star(* 0.10 ** 0.05 *** 0.01) ///
+        scalars("N N" "r2 R$^2$" "r2_a R$^2$-Ajustado") coeflabels(log_creditos "$\hat{Log(Creditos)}$" _cons "Constante")
 		
 *8
 eststo drop *
 eststo m1: reg log_creditos log_distbank, robust
-*predict res_hausman, residuals 
+predict res_hausman, residuals 
 eststo m2: reg log_ventas log_creditos res_hausman, robust
-esttab m1 m2 using "pregunta_1_8.tex", replace f booktabs nonumbers mtitles("1era Etapa" "2da Etapa") se(2) b(3) star(* 0.10 ** 0.05 *** 0.01) ///
-       scalars("N N" "r2 R$^2$" "F F-Statistic") coeflabels(log_distbank "log(Distancia)" log_creditos_predict "{Log(Creditos)}" _cons "Constante") 
+esttab m1 m2 using "pregunta_1_8.tex", replace f booktabs nonumbers mtitles("Log(Creditos)" "Log(Ventas)") se(2) b(3) star(* 0.10 ** 0.05 *** 0.01) ///
+       scalars("N N" "r2 R$^2$" "F F-Statistic") coeflabels(log_distbank "log(Distancia)" log_creditos "Log(Creditos)" res_hausman "$\hat{Residuos}$" _cons "Constante") 
 	   
 ivregress 2sls log_ventas (log_creditos=log_distbank), robust
 estat endogenous
 
-
-*9
-
-*10
 
