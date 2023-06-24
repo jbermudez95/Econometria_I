@@ -88,3 +88,83 @@ ivregress 2sls log_ventas (log_creditos=log_distbank), robust
 estat endogenous
 
 
+****************************
+**Ejercicio 2
+****************************
+
+* 1)
+
+use tarea_ej2_alumnos-1, clear
+
+sort empresa year
+
+gen tratamiento = 0
+
+replace tratamiento = 1 if MW_2014 >= 50
+
+preserve
+
+keep if year == 2019
+
+gen paga_impuesto = tratamiento
+
+reg lnemisiones paga_impuesto
+
+* 2)
+
+tabulate sector, generate(dummies)
+
+rename dummies1 agricultura
+rename dummies2 electricidad
+rename dummies3 manufacturas
+rename dummies4 servicios
+
+* 3)
+
+** a)
+ 
+reg tratamiento agricultura electricidad manufacturas servicios, nocons robust
+
+** b)
+
+reg lnemisiones agricultura electricidad manufacturas servicios, nocons robust
+
+** c) 
+
+reg lnemisiones paga_impuesto agricultura manufacturas servicios, robust
+
+restore
+
+* 4) 
+
+xtset empresa year
+
+* I)
+
+gen post = 0
+replace post = 1 if year == 2019
+
+gen int_trat_post = tratamiento*post
+
+reg lnemisiones tratamiento post int_trat_post, cluster(empresa)
+
+* VI)
+
+use tarea_ej2_alumnos-1, clear
+
+append using tarea_ej2_alumnos_parte2-1.dta
+
+sort empresa year
+
+gen tratamiento = 0
+
+replace tratamiento = 1 if MW_2014 >= 50
+
+collapse (mean) lnemisiones, by(tratamiento year)
+
+twoway (line lnemisiones year if tratamiento == 1) ///
+       (line lnemisiones year if tratamiento == 0), ///
+       xline(2014, lcolor(gray)) ///
+       xtitle("Año") ytitle("ln(Emisiones)") ///
+       title("Comparación de emisiones por tipo de empresa") ///
+       legend(label(1 "Tratadas") label(2 "Control"))
