@@ -9,7 +9,7 @@ if (_rc) ssc install estout														// Paquete necesario para generar tabla
 
 * Cargando directorios de los participantes del grupo
 if "`c(username)'" == "crist" {
-	cd "C:\Users\crist\OneDrive - Universidad Católica de Chile\Cristóbal\ME\1º Semestre\Econometría\Tareas\Tarea 1"
+	cd "C:\Users\crist\OneDrive - Universidad Católica de Chile\Cristóbal\ME\1º Semestre\Econometría\Tareas\Tarea 2"
 }
 else if "`c(username)'" == "Jose Carlo Bermúdez" {
 	cd "C:\Users\bermu\OneDrive - Universidad Católica de Chile\Clases\Econometría\Tareas\Tarea2"
@@ -108,9 +108,14 @@ keep if year == 2019
 
 gen paga_impuesto = tratamiento
 
-reg lnemisiones paga_impuesto
+eststo drop *
+eststo: reg lnemisiones paga_impuesto
+esttab using "pregunta_2_1.tex", replace f booktabs nonumbers mtitles("log(Emisiones)") se(2) b(3) star(* 0.10 ** 0.05 *** 0.01) ///
+       scalars("N N" "r2 R$^2$" "r2_a R$^2$-Ajustado") coeflabels(paga_impuesto "Paga Impuesto" _cons "Constante")
 
-* 2)
+* 2)	   
+	   
+* 3)
 
 tabulate sector, generate(dummies)
 
@@ -119,19 +124,28 @@ rename dummies2 electricidad
 rename dummies3 manufacturas
 rename dummies4 servicios
 
-* 3)
 
 ** a)
- 
-reg tratamiento agricultura electricidad manufacturas servicios, nocons robust
+
+eststo drop *
+eststo: reg tratamiento agricultura manufacturas servicios, robust
+esttab using "pregunta_2_3_a.tex", replace f booktabs nonumbers mtitles("Tratamiento") se(2) b(3) star(* 0.10 ** 0.05 *** 0.01) ///
+       scalars("N N" "r2 R$^2$" "r2_a R$^2$-Ajustado" "F F-Statistic") coeflabels(agricultura "agricultura" manufacturas "manufacturas" servicios "servicios" _cons "Constante")
 
 ** b)
 
-reg lnemisiones agricultura electricidad manufacturas servicios, nocons robust
+eststo drop *
+eststo: reg lnemisiones agricultura manufacturas servicios, robust
+esttab using "pregunta_2_3_b.tex", replace f booktabs nonumbers mtitles("log(emisiones)") se(2) b(3) star(* 0.10 ** 0.05 *** 0.01) ///
+       scalars("N N" "r2 R$^2$" "r2_a R$^2$-Ajustado" "F F-Statistic") coeflabels(agricultura "agricultura" manufacturas "manufacturas" servicios "servicios" _cons "Constante")
 
 ** c) 
 
-reg lnemisiones paga_impuesto agricultura manufacturas servicios, robust
+eststo drop *
+eststo: reg lnemisiones paga_impuesto agricultura manufacturas servicios, robust
+esttab using "pregunta_2_3_c.tex", replace f booktabs nonumbers mtitles("log(emisiones)") se(2) b(3) star(* 0.10 ** 0.05 *** 0.01) ///
+       scalars("N N" "r2 R$^2$" "r2_a R$^2$-Ajustado" "F F-Statistic") coeflabels(paga_impuesto "paga_impuesto" agricultura "agricultura" manufacturas "manufacturas" servicios "servicios"  _cons "Constante")
+
 
 restore
 
@@ -146,7 +160,10 @@ replace post = 1 if year == 2019
 
 gen int_trat_post = tratamiento*post
 
-reg lnemisiones tratamiento post int_trat_post, cluster(empresa)
+eststo drop *
+eststo: reg lnemisiones tratamiento post int_trat_post, cluster(empresa)
+esttab using "pregunta_2_4.tex", replace f booktabs nonumbers mtitles("log(emisiones)") se(2) b(3) star(* 0.10 ** 0.05 *** 0.01) ///
+       scalars("N N" "r2 R$^2$" "r2_a R$^2$-Ajustado") coeflabels(tratamiento "tratamiento" post "post" int_trat_post "int_trat_post" _cons "Constante")
 
 * VI)
 
@@ -162,9 +179,14 @@ replace tratamiento = 1 if MW_2014 >= 50
 
 collapse (mean) lnemisiones, by(tratamiento year)
 
-twoway (line lnemisiones year if tratamiento == 1) ///
-       (line lnemisiones year if tratamiento == 0), ///
+twoway (line lnemisiones year if tratamiento == 1, lpattern(dash) lcolor(blue)) ///
+       (line lnemisiones year if tratamiento == 0, lpattern(dash) lcolor(red)), ///
        xline(2014, lcolor(gray)) ///
-       xtitle("Año") ytitle("ln(Emisiones)") ///
-       title("Comparación de emisiones por tipo de empresa") ///
-       legend(label(1 "Tratadas") label(2 "Control"))
+       xtitle("Año") xscale(titlegap(3)) yscale(titlegap(3)) graphr(color(white)) ///
+	   ytitle("Emisiones Promedio en Log") yscale(titlegap(3)) ///
+       legend(label(1 "Empresas Tratadas") label(2 "Empresas de Control"))
+graph export "line_2.png", replace
+	   
+	   
+	   
+	   
