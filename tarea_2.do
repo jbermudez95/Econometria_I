@@ -87,15 +87,6 @@ esttab m1 m2 using "pregunta_1_8.tex", replace f booktabs nonumbers mtitles("Log
 ivregress 2sls log_ventas (log_creditos=log_distbank), robust
 estat endogenous
 
-*9
-gen log_empleados = ln(empleados)
-eststo drop *
-eststo: reg log_ventas log_creditos, robust
-eststo: reg log_ventas log_creditos log_empleados, robust
-eststo: reg log_creditos log_empleados, robust
-esttab using "pregunta_1_9.tex", replace f booktabs nonumbers mtitles("Log(Ventas)" "Log(Ventas)" "Log(Creditos)") se(2) b(3) star(* 0.10 ** 0.05 *** 0.01) ///
-       scalars("N N" "r2 R$^2$" "F F-Statistic") coeflabels(log_empleados "Log(Empleados)" log_creditos "Log(Creditos)" _cons "Constante") 
-
 
 ****************************
 **Ejercicio 2
