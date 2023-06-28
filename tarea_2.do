@@ -58,7 +58,7 @@ esttab m1 m2 using "pregunta_1_4.tex", replace f booktabs nonumbers mtitles("log
 	   
 *5
 gen log_distbank = ln(dist_bank)
-twoway (scatter log_distbank log_creditos , mcolor(blue%20)) (lfit log_distbank log_creditos, lc(dknavy)), ytitle("Log(Créditos)") legend(off) ///
+twoway (scatter log_creditos log_distbank, mcolor(blue%20)) (lfit log_creditos log_distbank, lc(dknavy)), ytitle("Log(Créditos)") legend(off) ///
 	   yscale(titlegap(3)) xtitle("Log(Distancia)") xscale(titlegap(3)) yscale(titlegap(3)) graphr(color(white))
 graph export "scatter_5.pdf", replace
 
