@@ -1,0 +1,775 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:\Users\bermu\OneDrive - Universidad Católica de Chile\Repositorios de Github\Econometria_I\log_tarea2.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}28 Jun 2023, 20:49:09
+{txt}
+{com}. 
+. cap which estout
+{txt}
+{com}. if (_rc) ssc install estout                                                                                                             // Paquete necesario para generar tablas en formato de Latex
+{txt}
+{com}. 
+. * Cargando directorios de los participantes del grupo
+. if "`c(username)'" == "crist" {c -(}
+.         cd "C:\Users\crist\OneDrive - Universidad Católica de Chile\Cristóbal\ME\1º Semestre\Econometría\Tareas\Tarea 2"
+. {c )-}
+{txt}
+{com}. else if "`c(username)'" == "Jose Carlo Bermúdez" {c -(}
+.         cd "C:\Users\bermu\OneDrive - Universidad Católica de Chile\Clases\Econometría\Tareas\Tarea2"
+{res}C:\Users\bermu\OneDrive - Universidad Católica de Chile\Clases\Econometría\Tareas\Tarea2
+{com}. {c )-}
+{txt}
+{com}. else if "`c(username)'" == "franc" {c -(}
+.         cd "C:\Users\franc\Desktop\Magíster en Economía\Econometría\Tareas\Tarea 2"
+. {c )-}
+{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "C:\Users\bermu\AppData\Local\Temp\STD5918_000000.tmp"
+{txt}
+{com}. use "tarea_ej1_alumnos-1.dta"
+{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "C:\Users\bermu\AppData\Local\Temp\STD5918_000000.tmp"
+{txt}
+{com}. gen log_ventas   = ln(ventas)
+{txt}
+{com}. gen log_creditos = ln(creditos)
+{txt}
+{com}. 
+. twoway (scatter log_ventas log_creditos, mcolor(blue%20))     ///
+>                 (lfit log_ventas log_creditos, lc(dknavy))                        ///
+>                 (lfit log_ventas log_ventas, lc(red) lp(dash)),       ///
+>                 ytitle("Log(Ventas)") yscale(titlegap(3))                         ///
+>             xtitle("Log(Créditos)") xscale(titlegap(3)) yscale(titlegap(3)) graphr(color(white)) ///
+>                 xlabel(0(1.4)7) ylabel(0(1.4)7) legend(pos(4) ring(0) col(1) ///
+>                 order(2 "Función de Regresión Muestral" 3 "Recta 45°") region(fcolor(white)))
+{res}{txt}
+{com}. graph export "scatter_1.pdf", replace
+{txt}{p 0 4 2}
+file {bf}
+scatter_1.pdf{rm}
+saved as
+PDF
+format
+{p_end}
+
+{com}. 
+{txt}end of do-file
+
+{com}. do "C:\Users\bermu\AppData\Local\Temp\STD5918_000000.tmp"
+{txt}
+{com}. eststo drop *
+{txt}(no matches found for {res}*{txt})
+
+{com}. eststo: reg log_ventas log_creditos 
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}       706
+{txt}{hline 13}{c +}{hline 34}   F(1, 704)       = {res}  9579.69
+{txt}       Model {c |} {res} 125.087557         1  125.087557   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 9.19253098       704  .013057572   {txt}R-squared       ={res}    0.9315
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.9314
+{txt}       Total {c |} {res} 134.280088       705   .19046821   {txt}Root MSE        =   {res} .11427
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}  log_ventas{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+log_creditos {c |}{col 14}{res}{space 2} 1.004627{col 26}{space 2} .0102643{col 37}{space 1}   97.88{col 46}{space 3}0.000{col 54}{space 4} .9844747{col 67}{space 3} 1.024779
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .3938387{col 26}{space 2}  .042255{col 37}{space 1}    9.32{col 46}{space 3}0.000{col 54}{space 4} .3108778{col 67}{space 3} .4767997
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}({res}est1{txt} stored)
+
+{com}. esttab using "pregunta_1_1.tex", replace f booktabs nonumbers mtitles("log(Ventas)") se(2) b(3) star(* 0.10 ** 0.05 *** 0.01) ///
+>        scalars("N N" "r2 R$^2$" "r2_a R$^2$-Ajustado") coeflabels(log_creditos "log(Créditos)" _cons "Constante") 
+{res}{txt}(output written to {browse  `"pregunta_1_1.tex"'})
+
+{com}. 
+. 
+{txt}end of do-file
+
+{com}. do "C:\Users\bermu\AppData\Local\Temp\STD5918_000000.tmp"
+{txt}
+{com}. gen log_numberescalones = ln(numberescalones)
+{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "C:\Users\bermu\AppData\Local\Temp\STD5918_000000.tmp"
+{txt}
+{com}. eststo drop *
+{res}{txt}({res}est1{txt} dropped)
+
+{com}. eststo m1: reg log_creditos exporter
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}       706
+{txt}{hline 13}{c +}{hline 34}   F(1, 704)       = {res}    29.35
+{txt}       Model {c |} {res} 4.96044435         1  4.96044435   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 118.977551       704  .169002203   {txt}R-squared       ={res}    0.0400
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0387
+{txt}       Total {c |} {res} 123.937995       705  .175798575   {txt}Root MSE        =   {res}  .4111
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}log_creditos{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 4}exporter {c |}{col 14}{res}{space 2} .1841311{col 26}{space 2}  .033987{col 37}{space 1}    5.42{col 46}{space 3}0.000{col 54}{space 4} .1174031{col 67}{space 3} .2508592
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 4.041335{col 26}{space 2} .0184033{col 37}{space 1}  219.60{col 46}{space 3}0.000{col 54}{space 4} 4.005204{col 67}{space 3} 4.077467
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. eststo m2: reg log_creditos log_numberescalones
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}       706
+{txt}{hline 13}{c +}{hline 34}   F(1, 704)       = {res}     0.13
+{txt}       Model {c |} {res} .022367345         1  .022367345   {txt}Prob > F        ={res}    0.7216
+{txt}    Residual {c |} {res} 123.915628       704  .176016517   {txt}R-squared       ={res}    0.0002
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}   -0.0012
+{txt}       Total {c |} {res} 123.937995       705  .175798575   {txt}Root MSE        =   {res} .41954
+
+{txt}{hline 20}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}       log_creditos{col 21}{c |} Coefficient{col 33}  Std. err.{col 45}      t{col 53}   P>|t|{col 61}     [95% con{col 74}f. interval]
+{hline 20}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+log_numberescalones {c |}{col 21}{res}{space 2} .0094136{col 33}{space 2} .0264075{col 44}{space 1}    0.36{col 53}{space 3}0.722{col 61}{space 4}-.0424332{col 74}{space 3} .0612605
+{txt}{space 14}_cons {c |}{col 21}{res}{space 2} 4.080475{col 33}{space 2} .0445447{col 44}{space 1}   91.60{col 53}{space 3}0.000{col 61}{space 4} 3.993018{col 74}{space 3} 4.167931
+{txt}{hline 20}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. esttab m1 m2 using "pregunta_1_4.tex", replace f booktabs nonumbers mtitles("log(Créditos)" "log(Créditos)") se(2) b(3) star(* 0.10 ** 0.05 *** 0.01) ///
+>        scalars("N N" "r2 R$^2$" "F F-Statistic") coeflabels(log_numberescalones "log(\# Escalones)" exporter "Exporter = 1" _cons "Constante") 
+{res}{txt}(output written to {browse  `"pregunta_1_4.tex"'})
+
+{com}. 
+{txt}end of do-file
+
+{com}. do "C:\Users\bermu\AppData\Local\Temp\STD5918_000000.tmp"
+{txt}
+{com}. gen log_distbank = ln(dist_bank)
+{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "C:\Users\bermu\AppData\Local\Temp\STD5918_000000.tmp"
+{txt}
+{com}. twoway (scatter log_creditos log_distbank, mcolor(blue%20)) (lfit log_creditos log_distbank, lc(dknavy)), ytitle("Log(Créditos)") legend(off) ///
+>            yscale(titlegap(3)) xtitle("Log(Distancia)") xscale(titlegap(3)) yscale(titlegap(3)) graphr(color(white))
+{res}{txt}
+{com}. graph export "scatter_5.pdf", replace
+{txt}{p 0 4 2}
+file {bf}
+scatter_5.pdf{rm}
+saved as
+PDF
+format
+{p_end}
+
+{com}. 
+{txt}end of do-file
+
+{com}. do "C:\Users\bermu\AppData\Local\Temp\STD5918_000000.tmp"
+{txt}
+{com}. eststo drop *
+{res}{txt}({res}m1{txt} dropped)
+{res}{txt}({res}m2{txt} dropped)
+
+{com}. eststo m1: reg log_creditos log_distbank, robust
+
+{txt}Linear regression                               Number of obs     = {res}       706
+                                                {txt}F(1, 704)         =  {res}    15.44
+                                                {txt}Prob > F          = {res}    0.0001
+                                                {txt}R-squared         = {res}    0.1071
+                                                {txt}Root MSE          =    {res} .39648
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}log_creditos{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+log_distbank {c |}{col 14}{res}{space 2}-.1074895{col 26}{space 2} .0273586{col 37}{space 1}   -3.93{col 46}{space 3}0.000{col 54}{space 4}-.1612036{col 67}{space 3}-.0537754
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 4.806395{col 26}{space 2} .1949576{col 37}{space 1}   24.65{col 46}{space 3}0.000{col 54}{space 4} 4.423627{col 67}{space 3} 5.189162
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. predict log_creditos_predict, xb
+{txt}
+{com}. eststo m2: reg log_ventas log_creditos_predict, robust
+
+{txt}Linear regression                               Number of obs     = {res}       706
+                                                {txt}F(1, 704)         =  {res}     6.50
+                                                {txt}Prob > F          = {res}    0.0110
+                                                {txt}R-squared         = {res}    0.0477
+                                                {txt}Root MSE          =    {res} .42619
+
+{txt}{hline 21}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 22}{c |}{col 34}    Robust
+{col 1}          log_ventas{col 22}{c |} Coefficient{col 34}  std. err.{col 46}      t{col 54}   P>|t|{col 62}     [95% con{col 75}f. interval]
+{hline 21}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+log_creditos_predict {c |}{col 22}{res}{space 2} .6948256{col 34}{space 2} .2724357{col 45}{space 1}    2.55{col 54}{space 3}0.011{col 62}{space 4} .1599417{col 75}{space 3} 1.229709
+{txt}{space 15}_cons {c |}{col 22}{res}{space 2} 1.662575{col 34}{space 2} 1.100682{col 45}{space 1}    1.51{col 54}{space 3}0.131{col 62}{space 4}-.4984374{col 75}{space 3} 3.823588
+{txt}{hline 21}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. esttab m1 m2 using "pregunta_1_6.tex", replace f booktabs nonumbers mtitles("1era Etapa" "2da Etapa") se(2) b(3) star(* 0.10 ** 0.05 *** 0.01) ///
+>        scalars("N N" "r2 R$^2$" "F F-Statistic") coeflabels(log_distbank "log(Distancia)" log_creditos_predict "$\hat{c -(}Log(Creditos){c )-}$" _cons "Constante") 
+{res}{txt}(output written to {browse  `"pregunta_1_6.tex"'})
+
+{com}. 
+{txt}end of do-file
+
+{com}. do "C:\Users\bermu\AppData\Local\Temp\STD5918_000000.tmp"
+{txt}
+{com}. eststo drop *
+{res}{txt}({res}m1{txt} dropped)
+{res}{txt}({res}m2{txt} dropped)
+
+{com}. eststo: ivregress 2sls log_ventas (log_creditos=log_distbank), robust
+{res}
+{txt}{col 1}Instrumental variables 2SLS regression{col 51}Number of obs{col 67}= {res}       706
+{txt}{col 1}{col 51}Wald chi2({res}1{txt}){col 67}= {res}     50.33
+{txt}{col 1}{col 51}Prob > chi2{col 67}= {res}    0.0000
+{txt}{col 1}{col 51}R-squared{col 67}= {res}    0.8430
+{txt}{col 51}Root MSE{col 67}=    {res} .17283
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}  log_ventas{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      z{col 46}   P>|z|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+log_creditos {c |}{col 14}{res}{space 2} .6948256{col 26}{space 2} .0979395{col 37}{space 1}    7.09{col 46}{space 3}0.000{col 54}{space 4} .5028677{col 67}{space 3} .8867835
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 1.662575{col 26}{space 2}  .395974{col 37}{space 1}    4.20{col 46}{space 3}0.000{col 54}{space 4} .8864806{col 67}{space 3}  2.43867
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{p 0 14 36}Instrumented: {res:log_creditos}{p_end}
+{p 0 14 36}{space 1}Instruments: {res:log_distbank}{p_end}
+({res}est1{txt} stored)
+
+{com}. esttab using "pregunta_1_7.tex", replace f booktabs nonumbers mtitles("log(Ventas)") se(2) b(3) star(* 0.10 ** 0.05 *** 0.01) ///
+>         scalars("N N" "r2 R$^2$" "r2_a R$^2$-Ajustado") coeflabels(log_creditos "$\hat{c -(}Log(Creditos){c )-}$" _cons "Constante")
+{res}{txt}(output written to {browse  `"pregunta_1_7.tex"'})
+
+{com}. 
+{txt}end of do-file
+
+{com}. do "C:\Users\bermu\AppData\Local\Temp\STD5918_000000.tmp"
+{txt}
+{com}. eststo drop *
+{res}{txt}({res}est1{txt} dropped)
+
+{com}. eststo m1: reg log_creditos log_distbank, robust
+
+{txt}Linear regression                               Number of obs     = {res}       706
+                                                {txt}F(1, 704)         =  {res}    15.44
+                                                {txt}Prob > F          = {res}    0.0001
+                                                {txt}R-squared         = {res}    0.1071
+                                                {txt}Root MSE          =    {res} .39648
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}log_creditos{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+log_distbank {c |}{col 14}{res}{space 2}-.1074895{col 26}{space 2} .0273586{col 37}{space 1}   -3.93{col 46}{space 3}0.000{col 54}{space 4}-.1612036{col 67}{space 3}-.0537754
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 4.806395{col 26}{space 2} .1949576{col 37}{space 1}   24.65{col 46}{space 3}0.000{col 54}{space 4} 4.423627{col 67}{space 3} 5.189162
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. predict res_hausman, residuals 
+{txt}
+{com}. eststo m2: reg log_ventas log_creditos res_hausman, robust
+
+{txt}Linear regression                               Number of obs     = {res}       706
+                                                {txt}F(2, 703)         =  {res}  4076.33
+                                                {txt}Prob > F          = {res}    0.0000
+                                                {txt}R-squared         = {res}    0.9422
+                                                {txt}Root MSE          =    {res}  .1051
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}  log_ventas{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+log_creditos {c |}{col 14}{res}{space 2} .6948256{col 26}{space 2} .0278864{col 37}{space 1}   24.92{col 46}{space 3}0.000{col 54}{space 4} .6400749{col 67}{space 3} .7495762
+{txt}{space 1}res_hausman {c |}{col 14}{res}{space 2} .3469576{col 26}{space 2} .0314821{col 37}{space 1}   11.02{col 46}{space 3}0.000{col 54}{space 4} .2851474{col 67}{space 3} .4087678
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 1.662575{col 26}{space 2} .1146703{col 37}{space 1}   14.50{col 46}{space 3}0.000{col 54}{space 4} 1.437438{col 67}{space 3} 1.887713
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. esttab m1 m2 using "pregunta_1_8.tex", replace f booktabs nonumbers mtitles("Log(Creditos)" "Log(Ventas)") se(2) b(3) star(* 0.10 ** 0.05 *** 0.01) ///
+>        scalars("N N" "r2 R$^2$" "F F-Statistic") coeflabels(log_distbank "log(Distancia)" log_creditos "Log(Creditos)" res_hausman "$\hat{c -(}Residuos{c )-}$" _cons "Constante") 
+{res}{txt}(output written to {browse  `"pregunta_1_8.tex"'})
+
+{com}. 
+{txt}end of do-file
+
+{com}. do "C:\Users\bermu\AppData\Local\Temp\STD5918_000000.tmp"
+{txt}
+{com}. ivregress 2sls log_ventas (log_creditos=log_distbank), robust
+{res}
+{txt}{col 1}Instrumental variables 2SLS regression{col 51}Number of obs{col 67}= {res}       706
+{txt}{col 1}{col 51}Wald chi2({res}1{txt}){col 67}= {res}     50.33
+{txt}{col 1}{col 51}Prob > chi2{col 67}= {res}    0.0000
+{txt}{col 1}{col 51}R-squared{col 67}= {res}    0.8430
+{txt}{col 51}Root MSE{col 67}=    {res} .17283
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}  log_ventas{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      z{col 46}   P>|z|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+log_creditos {c |}{col 14}{res}{space 2} .6948256{col 26}{space 2} .0979395{col 37}{space 1}    7.09{col 46}{space 3}0.000{col 54}{space 4} .5028677{col 67}{space 3} .8867835
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 1.662575{col 26}{space 2}  .395974{col 37}{space 1}    4.20{col 46}{space 3}0.000{col 54}{space 4} .8864806{col 67}{space 3}  2.43867
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{p 0 14 36}Instrumented: {res:log_creditos}{p_end}
+{p 0 14 36}{space 1}Instruments: {res:log_distbank}{p_end}
+
+{com}. estat endogenous
+
+{txt}{col 3}Tests of endogeneity
+{col 3}H0: Variables are exogenous
+
+{col 3}Robust score chi2({res}1{txt}){col 35}={res}{col 37} 29.9003{txt}  (p = {res}0.0000{txt})
+{col 3}Robust regression F({res}1{txt},{res}703{txt}){col 35}={res}{col 37} 121.458{txt}  (p = {res}0.0000{txt})
+
+{com}. 
+{txt}end of do-file
+
+{com}. do "C:\Users\bermu\AppData\Local\Temp\STD5918_000000.tmp"
+{txt}
+{com}. use tarea_ej2_alumnos-1, clear
+{txt}
+{com}. 
+. sort empresa year
+{txt}
+{com}. 
+. gen tratamiento = 0
+{txt}
+{com}. 
+. replace tratamiento = 1 if MW_2014 >= 50
+{txt}(100 real changes made)
+
+{com}. 
+. preserve
+{txt}
+{com}. 
+. keep if year == 2019
+{txt}(100 observations deleted)
+
+{com}. 
+{txt}end of do-file
+
+{com}. do "C:\Users\bermu\AppData\Local\Temp\STD5918_000000.tmp"
+{txt}
+{com}. eststo drop *
+{res}{txt}({res}m1{txt} dropped)
+{res}{txt}({res}m2{txt} dropped)
+
+{com}. eststo: reg lnemisiones tratamiento
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}       200
+{txt}{hline 13}{c +}{hline 34}   F(1, 198)       = {res}    89.51
+{txt}       Model {c |} {res} 33.1233956         1  33.1233956   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 73.2722198       198  .370061716   {txt}R-squared       ={res}    0.3113
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.3078
+{txt}       Total {c |} {res} 106.395615       199  .534651334   {txt}Root MSE        =   {res} .60833
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1} lnemisiones{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 1}tratamiento {c |}{col 14}{res}{space 2} .8139213{col 26}{space 2} .0860304{col 37}{space 1}    9.46{col 46}{space 3}0.000{col 54}{space 4} .6442678{col 67}{space 3} .9835748
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 5.487688{col 26}{space 2} .0608327{col 37}{space 1}   90.21{col 46}{space 3}0.000{col 54}{space 4} 5.367725{col 67}{space 3} 5.607651
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}({res}est1{txt} stored)
+
+{com}. esttab using "pregunta_2_1.tex", replace f booktabs nonumbers mtitles("log(Emisiones)") se(2) b(3) star(* 0.10 ** 0.05 *** 0.01) ///
+>        scalars("N N" "r2 R$^2$" "r2_a R$^2$-Ajustado") coeflabels(tratamiento "Tratamiento" _cons "Constante")
+{res}{txt}{p 0 4 2}
+(file {bf}
+pregunta_2_1.tex{rm}
+not found)
+{p_end}
+(output written to {browse  `"pregunta_2_1.tex"'})
+
+{com}. 
+{txt}end of do-file
+
+{com}. restore
+{err}nothing to restore
+{txt}{search r(622), local:r(622);}
+
+{com}. do "C:\Users\bermu\AppData\Local\Temp\STD5918_000000.tmp"
+{txt}
+{com}. use tarea_ej2_alumnos-1, clear
+{txt}
+{com}. 
+. sort empresa year
+{txt}
+{com}. 
+. gen tratamiento = 0
+{txt}
+{com}. 
+. replace tratamiento = 1 if MW_2014 >= 50
+{txt}(100 real changes made)
+
+{com}. 
+{txt}end of do-file
+
+{com}. preserve
+
+. do "C:\Users\bermu\AppData\Local\Temp\STD5918_000000.tmp"
+{txt}
+{com}. keep if year == 2019
+{txt}(100 observations deleted)
+
+{com}. 
+. eststo drop *
+{res}{txt}({res}est1{txt} dropped)
+
+{com}. eststo: reg lnemisiones tratamiento
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}       100
+{txt}{hline 13}{c +}{hline 34}   F(1, 98)        = {res}    36.34
+{txt}       Model {c |} {res} 11.3153096         1  11.3153096   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 30.5110092        98  .311336829   {txt}R-squared       ={res}    0.2705
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.2631
+{txt}       Total {c |} {res} 41.8263188        99  .422488069   {txt}Root MSE        =   {res} .55798
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1} lnemisiones{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 1}tratamiento {c |}{col 14}{res}{space 2} .6727647{col 26}{space 2} .1115951{col 37}{space 1}    6.03{col 46}{space 3}0.000{col 54}{space 4} .4513078{col 67}{space 3} .8942216
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 5.430145{col 26}{space 2} .0789097{col 37}{space 1}   68.81{col 46}{space 3}0.000{col 54}{space 4} 5.273551{col 67}{space 3} 5.586738
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}({res}est1{txt} stored)
+
+{com}. esttab using "pregunta_2_1.tex", replace f booktabs nonumbers mtitles("log(Emisiones)") se(2) b(3) star(* 0.10 ** 0.05 *** 0.01) ///
+>        scalars("N N" "r2 R$^2$" "r2_a R$^2$-Ajustado") coeflabels(tratamiento "Tratamiento" _cons "Constante")
+{res}{txt}(output written to {browse  `"pregunta_2_1.tex"'})
+
+{com}. 
+{txt}end of do-file
+
+{com}. do "C:\Users\bermu\AppData\Local\Temp\STD5918_000000.tmp"
+{txt}
+{com}. tabulate sector, generate(dummies)
+
+     {txt}sector {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+          1 {c |}{res}          8        8.00        8.00
+{txt}          2 {c |}{res}         10       10.00       18.00
+{txt}          3 {c |}{res}         70       70.00       88.00
+{txt}          4 {c |}{res}         12       12.00      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}        100      100.00
+{txt}
+{com}. 
+. rename dummies1 agricultura
+{res}{txt}
+{com}. rename dummies2 electricidad
+{res}{txt}
+{com}. rename dummies3 manufacturas
+{res}{txt}
+{com}. rename dummies4 servicios
+{res}{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "C:\Users\bermu\AppData\Local\Temp\STD5918_000000.tmp"
+{txt}
+{com}. eststo drop *
+{res}{txt}({res}est1{txt} dropped)
+
+{com}. eststo: reg tratamiento agricultura manufacturas servicios, robust
+
+{txt}Linear regression                               Number of obs     = {res}       100
+                                                {txt}F(3, 96)          =  {res}     1.46
+                                                {txt}Prob > F          = {res}    0.2298
+                                                {txt}R-squared         = {res}    0.0360
+                                                {txt}Root MSE          =    {res} .50104
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1} tratamiento{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 1}agricultura {c |}{col 14}{res}{space 2}     -.45{col 26}{space 2} .2151489{col 37}{space 1}   -2.09{col 46}{space 3}0.039{col 54}{space 4}-.8770673{col 67}{space 3}-.0229327
+{txt}manufacturas {c |}{col 14}{res}{space 2}      -.2{col 26}{space 2} .1599851{col 37}{space 1}   -1.25{col 46}{space 3}0.214{col 54}{space 4} -.517568{col 67}{space 3}  .117568
+{txt}{space 3}servicios {c |}{col 14}{res}{space 2}      -.2{col 26}{space 2} .2087496{col 37}{space 1}   -0.96{col 46}{space 3}0.340{col 54}{space 4}-.6143646{col 67}{space 3} .2143646
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}       .7{col 26}{space 2}  .147902{col 37}{space 1}    4.73{col 46}{space 3}0.000{col 54}{space 4} .4064169{col 67}{space 3} .9935831
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}({res}est1{txt} stored)
+
+{com}. esttab using "pregunta_2_3_a.tex", replace f booktabs nonumbers mtitles("Tratamiento") se(2) b(3) star(* 0.10 ** 0.05 *** 0.01) ///
+>        scalars("N N" "r2 R$^2$" "r2_a R$^2$-Ajustado" "F F-Statistic") coeflabels(agricultura "agricultura" manufacturas "manufacturas" servicios "servicios" _cons "Constante")
+{res}{txt}{p 0 4 2}
+(file {bf}
+pregunta_2_3_a.tex{rm}
+not found)
+{p_end}
+(output written to {browse  `"pregunta_2_3_a.tex"'})
+
+{com}. 
+{txt}end of do-file
+
+{com}. do "C:\Users\bermu\AppData\Local\Temp\STD5918_000000.tmp"
+{txt}
+{com}. eststo drop *
+{res}{txt}({res}est1{txt} dropped)
+
+{com}. eststo: reg lnemisiones agricultura manufacturas servicios, robust
+
+{txt}Linear regression                               Number of obs     = {res}       100
+                                                {txt}F(3, 96)          =  {res}     2.90
+                                                {txt}Prob > F          = {res}    0.0389
+                                                {txt}R-squared         = {res}    0.1109
+                                                {txt}Root MSE          =    {res} .62239
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1} lnemisiones{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 1}agricultura {c |}{col 14}{res}{space 2}-.8434114{col 26}{space 2} .3372971{col 37}{space 1}   -2.50{col 46}{space 3}0.014{col 54}{space 4}-1.512941{col 67}{space 3} -.173882
+{txt}manufacturas {c |}{col 14}{res}{space 2}-.6642813{col 26}{space 2} .2692994{col 37}{space 1}   -2.47{col 46}{space 3}0.015{col 54}{space 4}-1.198836{col 67}{space 3}-.1297262
+{txt}{space 3}servicios {c |}{col 14}{res}{space 2}-.4429865{col 26}{space 2} .2934286{col 37}{space 1}   -1.51{col 46}{space 3}0.134{col 54}{space 4}-1.025438{col 67}{space 3} .1394648
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 6.352155{col 26}{space 2} .2591385{col 37}{space 1}   24.51{col 46}{space 3}0.000{col 54}{space 4}  5.83777{col 67}{space 3} 6.866541
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}({res}est1{txt} stored)
+
+{com}. esttab using "pregunta_2_3_b.tex", replace f booktabs nonumbers mtitles("log(emisiones)") se(2) b(3) star(* 0.10 ** 0.05 *** 0.01) ///
+>        scalars("N N" "r2 R$^2$" "r2_a R$^2$-Ajustado" "F F-Statistic") coeflabels(agricultura "agricultura" manufacturas "manufacturas" servicios "servicios" _cons "Constante")
+{res}{txt}{p 0 4 2}
+(file {bf}
+pregunta_2_3_b.tex{rm}
+not found)
+{p_end}
+(output written to {browse  `"pregunta_2_3_b.tex"'})
+
+{com}. 
+{txt}end of do-file
+
+{com}. do "C:\Users\bermu\AppData\Local\Temp\STD5918_000000.tmp"
+{txt}
+{com}. eststo drop *
+{res}{txt}({res}est1{txt} dropped)
+
+{com}. eststo: reg lnemisiones tratamiento agricultura manufacturas servicios, robust
+
+{txt}Linear regression                               Number of obs     = {res}       100
+                                                {txt}F(4, 95)          =  {res}    15.80
+                                                {txt}Prob > F          = {res}    0.0000
+                                                {txt}R-squared         = {res}    0.3381
+                                                {txt}Root MSE          =    {res} .53985
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1} lnemisiones{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 1}tratamiento {c |}{col 14}{res}{space 2} .6278961{col 26}{space 2} .1120476{col 37}{space 1}    5.60{col 46}{space 3}0.000{col 54}{space 4} .4054534{col 67}{space 3} .8503388
+{txt}{space 1}agricultura {c |}{col 14}{res}{space 2}-.5608581{col 26}{space 2} .2487898{col 37}{space 1}   -2.25{col 46}{space 3}0.026{col 54}{space 4}-1.054768{col 67}{space 3}-.0669479
+{txt}manufacturas {c |}{col 14}{res}{space 2}-.5387021{col 26}{space 2} .1898941{col 37}{space 1}   -2.84{col 46}{space 3}0.006{col 54}{space 4}-.9156896{col 67}{space 3}-.1617147
+{txt}{space 3}servicios {c |}{col 14}{res}{space 2}-.3174072{col 26}{space 2}  .227965{col 37}{space 1}   -1.39{col 46}{space 3}0.167{col 54}{space 4}-.7699749{col 67}{space 3} .1351604
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 5.912628{col 26}{space 2} .2027276{col 37}{space 1}   29.17{col 46}{space 3}0.000{col 54}{space 4} 5.510163{col 67}{space 3} 6.315093
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}({res}est1{txt} stored)
+
+{com}. esttab using "pregunta_2_3_c.tex", replace f booktabs nonumbers mtitles("log(emisiones)") se(2) b(3) star(* 0.10 ** 0.05 *** 0.01) ///
+>        scalars("N N" "r2 R$^2$" "r2_a R$^2$-Ajustado" "F F-Statistic") coeflabels(tratamiento "tratamiento" agricultura "agricultura" manufacturas "manufacturas" servicios "servicios"  _cons "Constante")
+{res}{txt}{p 0 4 2}
+(file {bf}
+pregunta_2_3_c.tex{rm}
+not found)
+{p_end}
+(output written to {browse  `"pregunta_2_3_c.tex"'})
+
+{com}. 
+{txt}end of do-file
+
+{com}. restore
+
+. do "C:\Users\bermu\AppData\Local\Temp\STD5918_000000.tmp"
+{txt}
+{com}. xtset empresa year
+{res}
+{col 1}{txt:Panel variable: }{res:empresa}{txt: (strongly balanced)}
+{p 1 16 2}{txt:Time variable: }{res:year}{txt:, }{res:{bind:2014}}{txt: to }{res:{bind:2019}}{txt:, but with gaps}{p_end}
+{txt}{col 10}Delta: {res}1 unit
+{txt}
+{com}. 
+. * 4 - I)
+. 
+. gen post = 0
+{txt}
+{com}. replace post = 1 if year == 2019
+{txt}(100 real changes made)
+
+{com}. 
+. gen int_trat_post = tratamiento*post
+{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "C:\Users\bermu\AppData\Local\Temp\STD5918_000000.tmp"
+{txt}
+{com}. eststo drop *
+{res}{txt}({res}est1{txt} dropped)
+
+{com}. eststo: reg lnemisiones tratamiento post int_trat_post, cluster(empresa)
+
+{txt}Linear regression                               Number of obs     = {res}       200
+                                                {txt}F(3, 99)          =  {res}   184.09
+                                                {txt}Prob > F          = {res}    0.0000
+                                                {txt}R-squared         = {res}    0.3515
+                                                {txt}Root MSE          =    {res}  .5933
+
+{txt}{ralign 79:(Std. err. adjusted for {res:100} clusters in {res:empresa})}
+{hline 14}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 15}{c |}{col 27}    Robust
+{col 1}  lnemisiones{col 15}{c |} Coefficient{col 27}  std. err.{col 39}      t{col 47}   P>|t|{col 55}     [95% con{col 68}f. interval]
+{hline 14}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 2}tratamiento {c |}{col 15}{res}{space 2} .9550779{col 27}{space 2} .1256433{col 38}{space 1}    7.60{col 47}{space 3}0.000{col 55}{space 4} .7057744{col 68}{space 3} 1.204381
+{txt}{space 9}post {c |}{col 15}{res}{space 2}-.1150864{col 27}{space 2} .0211571{col 38}{space 1}   -5.44{col 47}{space 3}0.000{col 55}{space 4}-.1570667{col 68}{space 3}-.0731061
+{txt}int_trat_post {c |}{col 15}{res}{space 2}-.2823132{col 27}{space 2} .0276848{col 38}{space 1}  -10.20{col 47}{space 3}0.000{col 55}{space 4}-.3372458{col 68}{space 3}-.2273806
+{txt}{space 8}_cons {c |}{col 15}{res}{space 2} 5.545231{col 27}{space 2} .0884815{col 38}{space 1}   62.67{col 47}{space 3}0.000{col 55}{space 4} 5.369665{col 68}{space 3} 5.720798
+{txt}{hline 14}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}({res}est1{txt} stored)
+
+{com}. esttab using "pregunta_2_4.tex", replace f booktabs nonumbers mtitles("log(emisiones)") se(2) b(3) star(* 0.10 ** 0.05 *** 0.01) ///
+>        scalars("N N" "r2 R$^2$" "r2_a R$^2$-Ajustado") coeflabels(tratamiento "tratamiento" post "post" int_trat_post "int_trat_post" _cons "Constante")
+{res}{txt}{p 0 4 2}
+(file {bf}
+pregunta_2_4.tex{rm}
+not found)
+{p_end}
+(output written to {browse  `"pregunta_2_4.tex"'})
+
+{com}. 
+{txt}end of do-file
+
+{com}. do "C:\Users\bermu\AppData\Local\Temp\STD5918_000000.tmp"
+{txt}
+{com}. eststo drop *
+{res}{txt}({res}est1{txt} dropped)
+
+{com}. eststo: reg lnemisiones tratamiento post int_trat_post, cluster(empresa)
+
+{txt}Linear regression                               Number of obs     = {res}       200
+                                                {txt}F(3, 99)          =  {res}   184.09
+                                                {txt}Prob > F          = {res}    0.0000
+                                                {txt}R-squared         = {res}    0.3515
+                                                {txt}Root MSE          =    {res}  .5933
+
+{txt}{ralign 79:(Std. err. adjusted for {res:100} clusters in {res:empresa})}
+{hline 14}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 15}{c |}{col 27}    Robust
+{col 1}  lnemisiones{col 15}{c |} Coefficient{col 27}  std. err.{col 39}      t{col 47}   P>|t|{col 55}     [95% con{col 68}f. interval]
+{hline 14}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 2}tratamiento {c |}{col 15}{res}{space 2} .9550779{col 27}{space 2} .1256433{col 38}{space 1}    7.60{col 47}{space 3}0.000{col 55}{space 4} .7057744{col 68}{space 3} 1.204381
+{txt}{space 9}post {c |}{col 15}{res}{space 2}-.1150864{col 27}{space 2} .0211571{col 38}{space 1}   -5.44{col 47}{space 3}0.000{col 55}{space 4}-.1570667{col 68}{space 3}-.0731061
+{txt}int_trat_post {c |}{col 15}{res}{space 2}-.2823132{col 27}{space 2} .0276848{col 38}{space 1}  -10.20{col 47}{space 3}0.000{col 55}{space 4}-.3372458{col 68}{space 3}-.2273806
+{txt}{space 8}_cons {c |}{col 15}{res}{space 2} 5.545231{col 27}{space 2} .0884815{col 38}{space 1}   62.67{col 47}{space 3}0.000{col 55}{space 4} 5.369665{col 68}{space 3} 5.720798
+{txt}{hline 14}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}({res}est1{txt} stored)
+
+{com}. esttab using "pregunta_2_4.tex", replace f booktabs nonumbers mtitles("log(emisiones)") se(2) b(3) star(* 0.10 ** 0.05 *** 0.01) ///
+>        scalars("N N" "r2 R$^2$" "r2_a R$^2$-Ajustado") coeflabels(tratamiento "tratamiento" post "post" int_trat_post "tratamiento $\times$ post" _cons "Constante")
+{res}{txt}(output written to {browse  `"pregunta_2_4.tex"'})
+
+{com}. 
+{txt}end of do-file
+
+{com}. reg lnemisiones tratamiento post tratamiento## post , cluster(empresa)
+{txt}{p 0 6 2}note: {bf:1.tratamiento} omitted because of collinearity.{p_end}
+{p 0 6 2}note: {bf:1.post} omitted because of collinearity.{p_end}
+
+Linear regression                               Number of obs     = {res}       200
+                                                {txt}F(3, 99)          =  {res}   184.09
+                                                {txt}Prob > F          = {res}    0.0000
+                                                {txt}R-squared         = {res}    0.3515
+                                                {txt}Root MSE          =    {res}  .5933
+
+{txt}{ralign 82:(Std. err. adjusted for {res:100} clusters in {res:empresa})}
+{hline 17}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 18}{c |}{col 30}    Robust
+{col 1}     lnemisiones{col 18}{c |} Coefficient{col 30}  std. err.{col 42}      t{col 50}   P>|t|{col 58}     [95% con{col 71}f. interval]
+{hline 17}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 5}tratamiento {c |}{col 18}{res}{space 2} .9550779{col 30}{space 2} .1256433{col 41}{space 1}    7.60{col 50}{space 3}0.000{col 58}{space 4} .7057744{col 71}{space 3} 1.204381
+{txt}{space 12}post {c |}{col 18}{res}{space 2}-.1150864{col 30}{space 2} .0211571{col 41}{space 1}   -5.44{col 50}{space 3}0.000{col 58}{space 4}-.1570667{col 71}{space 3}-.0731061
+{txt}{space 3}1.tratamiento {c |}{col 18}{res}{space 2}        0{col 30}{txt}  (omitted)
+{space 10}1.post {c |}{col 18}{res}{space 2}        0{col 30}{txt}  (omitted)
+{space 16} {c |}
+tratamiento#post {c |}
+{space 12}1 1  {c |}{col 18}{res}{space 2}-.2823132{col 30}{space 2} .0276848{col 41}{space 1}  -10.20{col 50}{space 3}0.000{col 58}{space 4}-.3372458{col 71}{space 3}-.2273806
+{txt}{space 16} {c |}
+{space 11}_cons {c |}{col 18}{res}{space 2} 5.545231{col 30}{space 2} .0884815{col 41}{space 1}   62.67{col 50}{space 3}0.000{col 58}{space 4} 5.369665{col 71}{space 3} 5.720798
+{txt}{hline 17}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{com}. do "C:\Users\bermu\AppData\Local\Temp\STD5918_000000.tmp"
+{txt}
+{com}. use tarea_ej2_alumnos-1, clear
+{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "C:\Users\bermu\AppData\Local\Temp\STD5918_000000.tmp"
+{txt}
+{com}. append using tarea_ej2_alumnos_parte2-1.dta
+{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. tab year
+
+       {txt}year {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+       2010 {c |}{res}        100       16.67       16.67
+{txt}       2011 {c |}{res}        100       16.67       33.33
+{txt}       2012 {c |}{res}        100       16.67       50.00
+{txt}       2013 {c |}{res}        100       16.67       66.67
+{txt}       2014 {c |}{res}        100       16.67       83.33
+{txt}       2019 {c |}{res}        100       16.67      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}        600      100.00
+
+{com}. do "C:\Users\bermu\AppData\Local\Temp\STD5918_000000.tmp"
+{txt}
+{com}. sort empresa year
+{txt}
+{com}. 
+. gen tratamiento = 0
+{txt}
+{com}. 
+. replace tratamiento = 1 if MW_2014 >= 50
+{txt}(300 real changes made)
+
+{com}. 
+. collapse (mean) lnemisiones, by(tratamiento year)
+{res}{txt}
+{com}. 
+. 
+{txt}end of do-file
+
+{com}. do "C:\Users\bermu\AppData\Local\Temp\STD5918_000000.tmp"
+{txt}
+{com}. twoway (line lnemisiones year if tratamiento == 1, lpattern(dash) lcolor(blue)) ///
+>        (line lnemisiones year if tratamiento == 0, lpattern(dash) lcolor(red)), ///
+>        xline(2014, lcolor(gray)) ///
+>        xtitle("Año") xscale(titlegap(3)) yscale(titlegap(3)) graphr(color(white)) ///
+>            ytitle("Emisiones Promedio en Log") yscale(titlegap(3)) ///
+>        legend(label(1 "Empresas Tratadas") label(2 "Empresas de Control"))
+{res}{txt}
+{com}. graph export "line_2.png", replace
+{txt}{p 0 4 2}
+(file {bf}
+line_2.png{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+line_2.png{rm}
+saved as
+PNG
+format
+{p_end}
+
+{com}. 
+{txt}end of do-file
+
+{com}. do "C:\Users\bermu\AppData\Local\Temp\STD5918_000000.tmp"
+{txt}
+{com}. log close
+      {txt}name:  {res}<unnamed>
+       {txt}log:  {res}C:\Users\bermu\OneDrive - Universidad Católica de Chile\Repositorios de Github\Econometria_I\log_tarea2.smcl
+  {txt}log type:  {res}smcl
+ {txt}closed on:  {res}28 Jun 2023, 21:05:45
+{txt}{.-}
+{smcl}
+{txt}{sf}{ul off}
